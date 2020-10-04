@@ -1,5 +1,7 @@
 # ROS Pylauncher
 
+<a href="https://www.repostatus.org/#wip"><img src="https://www.repostatus.org/badges/latest/wip.svg" alt="Project Status: WIP – Initial development is in progress, but there has not yet been a stable, usable release suitable for the public." /></a>
+
 
 
 ## Overview
@@ -133,7 +135,8 @@ File associated - `pylauncher.py` and `blueprint_node.py`
 
 ---
 
-
+/node1/inst_num
+/node2/inst_num
 
 ## Article
 
