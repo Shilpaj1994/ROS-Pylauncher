@@ -4,6 +4,7 @@ import rospy
 import sys
 import subprocess
 import time
+import cv2
 
 
 state = False
@@ -55,7 +56,7 @@ class Node:
 
 def launch_core():
     subprocess.Popen('roscore')
-    time.sleep(1)  # Delay to initialize the roscore
+    time.sleep(3)  # Delay to initialize the roscore
 
 
 def launch_sim():
@@ -80,11 +81,12 @@ def main(number_of_nodes):
     node_collections = []
 
     try:
+        # launch_core()
         global state
         launch_sim()
 
-        package = 'turtlesim-tf'
-        executable = 'add_frame.py'
+        package = 'pylauncher'
+        executable = 'blueprint_node.py'
 
         # For given number of instances
         for i in range(1, number_of_nodes+1):
@@ -100,23 +102,26 @@ def main(number_of_nodes):
             # Launch Nodes
             node_collections[-1].launch()
 
+        rospy.set_param('/activity_status', 1)
+
         while True:
-            if state:
+            status = rospy.get_param('/activity_status')
+
+            if status != 1:
                 break
             else:
                 pass
 
     except KeyboardInterrupt:
         state = True
+        print("Keyboard Interrupt", stat)
 
     except Exception as e:
         print(e)
 
     finally:
         print("Exiting the process ....")
-        # Kill nodes on exit
-        for j in range(len(node_collections)):
-            node_collections[-1].kill()
+        # Don't need to Kill nodes explicitly since they died when rospy.is_shutdown interrupt occurred
         exit()
 
 
