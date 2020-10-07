@@ -1,13 +1,22 @@
 #!/usr/bin/env python
-
-import tf
+"""
+Blueprint node for launching using ROS APIs
+Author: Shilpaj Bhalerao
+Date: Oct 04, 2020
+"""
 import math
 import random
-from Turtle import *
+import sys
+from turtle import Turtle
+import tf
+import rospy
 from std_msgs.msg import Int64
 
 
-class Frame:
+class Instance:
+    """
+    Class for multiple instance launch
+    """
     def __init__(self, value):
         # Initialize a node
         rospy.init_node('turtle', anonymous=False)
@@ -19,11 +28,11 @@ class Frame:
         self._instance_number = value
 
         # Broadcaster
-        self.br = tf.TransformBroadcaster()
+        self.broadcast = tf.TransformBroadcaster()
 
         # Variables for position and orientation of turtles
-        self.x = 0.0
-        self.y = 0.0
+        self.x_pos = 0.0
+        self.y_pos = 0.0
         self.theta = 0.0
 
         # Rate
@@ -55,7 +64,7 @@ class Frame:
 
         self.rand_pos()
 
-        self.turtle.spawn(self.x, self.y, self.theta)
+        self.turtle.spawn(self.x_pos, self.y_pos, self.theta)
         print(self.turtle.get_name())
 
     def random_spawn_test(self):
@@ -68,41 +77,48 @@ class Frame:
 
             self.rand_pos()
 
-            collection[i].spawn(self.x, self.y, self.theta)
+            collection[i].spawn(self.x_pos, self.y_pos, self.theta)
             print(collection[i].get_name())
 
     def rand_pos(self):
         """
         Method to set a random position and orientation of a turtle in a turtlesim
         """
-        self.x = random.randint(0, 11)
-        self.y = random.randint(0, 11)
+        self.x_pos = random.randint(0, 11)
+        self.y_pos = random.randint(0, 11)
         self.theta = random.random()
 
     def dynamic_frame(self):
         """
         Method to broadcast the dynamic transform
         """
-        t = rospy.Time.now().to_sec() * math.pi
-        self.br.sendTransform((2.0 * math.sin(t), 2.0 * math.cos(t), 0.0),
-                              (0.0, 0.0, 0.0, 1.0),
-                              rospy.Time.now(),
-                              "turtle"+str(self._instance_number),
-                              "world")
+        time_now = rospy.Time.now().to_sec() * math.pi
+        self.broadcast.sendTransform((2.0 * math.sin(time_now), 2.0 * math.cos(time_now), 0.0),
+                                     (0.0, 0.0, 0.0, 1.0),
+                                     rospy.Time.now(),
+                                     "turtle" + str(self._instance_number),
+                                     "world")
 
 
 def on_exit():
+    """
+    Sequence to be executed during shutdown
+    """
     rospy.set_param('/activity_status', 0)
 
 
 def main(value):
+    """
+    Main Function
+    """
     try:
         # reset_sim()
-        Frame(value)
+        Instance(value)
         rospy.on_shutdown(on_exit)
     except Exception as error:
-        exit()
+        print(error)
+        sys.exit()
 
 
-if __name__ == '__main__':    
+if __name__ == '__main__':
     main(int(sys.argv[1]))
