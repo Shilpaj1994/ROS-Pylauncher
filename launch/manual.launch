@@ -1,0 +1,11 @@
+<launch> 
+
+	<!-- Start Nodes -->
+	<node    name="turtle1"    pkg="pylauncher"    type="blueprint_node_launch.py"    output="screen"/>
+	<node    name="turtle2"    pkg="pylauncher"    type="blueprint_node_launch.py"    output="screen"/>
+	<node    name="turtle3"    pkg="pylauncher"    type="blueprint_node_launch.py"    output="screen"/>
+	<node    name="turtle4"    pkg="pylauncher"    type="blueprint_node_launch.py"    output="screen"/>
+	<node    name="turtle5"    pkg="pylauncher"    type="blueprint_node_launch.py"    output="screen"/>
+   
+</launch>
+

@@ -100,7 +100,7 @@ def main(value):
         # reset_sim()
         Frame(value)
         rospy.on_shutdown(on_exit)
-    except KeyboardInterrupt:
+    except Exception as error:
         exit()
 
 

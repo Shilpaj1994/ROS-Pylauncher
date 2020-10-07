@@ -15,8 +15,8 @@ class Frame:
         # Log node status
         rospy.loginfo("Node Initialized")
 
-        instan = rospy.get_param('/inst_num')
-        print(instan)
+        # instan = rospy.get_param('/inst_num')
+        # print(instan)
 
         # Broadcaster
         self.br = tf.TransformBroadcaster()

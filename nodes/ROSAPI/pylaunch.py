@@ -81,7 +81,7 @@ def main(number_of_nodes):
     node_collections = []
 
     try:
-        # launch_core()
+        launch_core()
         global state
         launch_sim()
 
