@@ -1,13 +1,23 @@
 #!/usr/bin/env python
-
-import tf
+"""
+Blueprint node for launching using xml launch files
+Author: Shilpaj Bhalerao
+Date: Oct 04, 2020
+"""
 import math
 import random
-from Turtle import *
+import sys
+import rospy
+import tf
+
 from std_msgs.msg import Int64
+# from ROSAPI.Turtle import *
 
 
 class Frame:
+    """
+    Class whose multiple instances has to be initiated
+    """
     def __init__(self):
         # Initialize a node
         rospy.init_node('turtle', anonymous=False)
@@ -15,15 +25,12 @@ class Frame:
         # Log node status
         rospy.loginfo("Node Initialized")
 
-        # instan = rospy.get_param('/inst_num')
-        # print(instan)
-
         # Broadcaster
-        self.br = tf.TransformBroadcaster()
+        self.broadcast = tf.TransformBroadcaster()
 
         # Variables for position and orientation of turtles
-        self.x = 0.0
-        self.y = 0.0
+        self.x_pos = 0.0
+        self.y_pos = 0.0
         self.theta = 0.0
 
         # Rate
@@ -47,57 +54,60 @@ class Frame:
             self.pub.publish()
             self.rate.sleep()
 
-    def random_spawn(self):
-        """
-        Method to spawn only a single instance of a turtle
-        """
-        self.turtle = Turtle()
+    # def random_spawn(self):
+    #     """
+    #     Method to spawn only a single instance of a turtle
+    #     """
+    #     self.turtle = Turtle()
+    #
+    #     self.rand_pos()
+    #
+    #     self.turtle.spawn(self.x_pos, self.y_pos, self.theta)
+    #     print(self.turtle.get_name())
 
-        self.rand_pos()
-
-        self.turtle.spawn(self.x, self.y, self.theta)
-        print(self.turtle.get_name())
-
-    def random_spawn_test(self):
-        """
-        Method to spawn multiple instances of a turtle
-        """
-        collection = []
-        for i in range(self._instance_number):
-            collection.append(Turtle(i))
-
-            self.rand_pos()
-
-            collection[i].spawn(self.x, self.y, self.theta)
-            print(collection[i].get_name())
+    # def random_spawn_test(self):
+    #     """
+    #     Method to spawn multiple instances of a turtle
+    #     """
+    #     collection = []
+    #     for i in range(self._instance_number):
+    #         collection.append(Turtle(i))
+    #
+    #         self.rand_pos()
+    #
+    #         collection[i].spawn(self.x_pos, self.y_pos, self.theta)
+    #         print(collection[i].get_name())
 
     def rand_pos(self):
         """
-        Method to set a random position and orientation of a turtle in a turtlesim
+        Method to set a random position and orientation of a turtle in a turtle-sim
         """
-        self.x = random.randint(0, 11)
-        self.y = random.randint(0, 11)
+        self.x_pos = random.randint(0, 11)
+        self.y_pos = random.randint(0, 11)
         self.theta = random.random()
 
     def dynamic_frame(self):
         """
         Method to broadcast the dynamic transform
         """
-        t = rospy.Time.now().to_sec() * math.pi
-        self.br.sendTransform((2.0 * math.sin(t), 2.0 * math.cos(t), 0.0),
-                              (0.0, 0.0, 0.0, 1.0),
-                              rospy.Time.now(),
-                              "turtle",
-                              "world")
+        time_now = rospy.Time.now().to_sec() * math.pi
+        self.broadcast.sendTransform((2.0 * math.sin(time_now), 2.0 * math.cos(time_now), 0.0),
+                                     (0.0, 0.0, 0.0, 1.0),
+                                     rospy.Time.now(),
+                                     "turtle",
+                                     "world")
 
 
 def main():
+    """
+    Main Function
+    """
     try:
         # reset_sim()
         Frame()
     except KeyboardInterrupt:
-        exit()
+        sys.exit()
 
 
-if __name__ == '__main__':    
+if __name__ == '__main__':
     main()
