@@ -1,10 +1,14 @@
 #!/usr/bin/env python
+"""
+Author: Shilpaj BHhalerao
+Date:
+Script to launch ROS nodes with more control
+"""
+import subprocess
+import sys
+import time
 import roslaunch
 import rospy
-import sys
-import subprocess
-import time
-import cv2
 
 
 state = False
@@ -55,6 +59,9 @@ class Node:
 
 
 def launch_core():
+    """
+    Function to launch ROSCORE
+    """
     subprocess.Popen('roscore')
     time.sleep(3)  # Delay to initialize the roscore
 
@@ -109,20 +116,19 @@ def main(number_of_nodes):
 
             if status != 1:
                 break
-            else:
-                pass
 
     except KeyboardInterrupt:
         state = True
-        print("Keyboard Interrupt", stat)
+        print("Keyboard Interrupt", state)
 
-    except Exception as e:
-        print(e)
+    except Exception as error:
+        print(error)
 
     finally:
         print("Exiting the process ....")
-        # Don't need to Kill nodes explicitly since they died when rospy.is_shutdown interrupt occurred
-        exit()
+        # Don't need to Kill nodes explicitly since 
+        # they died when rospy.is_shutdown interrupt occurred
+        sys.exit()
 
 
 if __name__ == '__main__':
